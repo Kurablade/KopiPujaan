@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Document</title>
+    <style>
+        @font-face {
+            font-family: 'Bizantheum';
+            src: url('Bizantheum.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'FuturanBookBT';
+            src: url('futura.ttf') format('opentype');
+        }
+        body, h1, h2, h3, h4, h5, h6, p, a, button {
+            font-family: 'Bizantheum', sans-serif;
+        }
+        .futura {
+            font-family: 'FuturanBookBT', sans-serif;
+        }
+        header {
+            background-color: #C7AE98;
+            padding: 20px;
+            text-align: left;
+            font-size: 24px;
+            position: relative;
+        }
+        header::before {
+            content: 'MENU_';
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            font-size: 18px;
+        }
+        .main-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            position: relative;
+        }
+        .menu-item {
+            position: relative;
+            width: 400px;
+        }
+        .menu-item img {
+            width: 100%;
+            transition: opacity 0.5s ease;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .thumbnails {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.3s ease;
+        }
+        .thumbnail:hover {
+            border: 2px solid #333;
+        }
+        .thumbnail.selected {
+            border: 5px solid #b08d6f;
+            border-radius: 50%;
+            padding: 10px;
+            display: inline-block;
+        }
+        .lines .line {
+            position: absolute;
+            background-color: #b08d6f;
+        }
+        .lines .horizontal {
+            height: 2px;
+            width: 100%;
+            left: 0;
+        }
+        .lines .vertical {
+            width: 2px;
+            height: 100%;
+            top: 0;
+        }
+        .lines .top {
+            top: 0;
+        }
+        .lines .bottom {
+            bottom: 0;
+        }
+        .lines .left {
+            left: 0;
+        }
+        .lines .right {
+            right: 0;
+        }
+        .circle-border {
+            border: 5px solid #b08d6f;
+            border-radius: 50%;
+            padding: 10px;
+            display: inline-block;
+        }
+        .circle-border img {
+            border-radius: 50%;
+            display: block;
+        }
+        .navbar {
+            position: relative;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background for better visibility */
+        }
+        .layered-bg {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .layered-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0);
+            z-index: 1;
+        }
+        .background-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            transition: transform 1s ease;
+        }
+        .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+        .content h1 {
+            font-size: 3em;
+        }
+        .arrow-down {
+            position: absolute;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            z-index: 2;
+        }
+        .arrow-down:hover {
+            color: #ffffff;
+        }
+        .background-container {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-image: url('bg/bg1.png');
+        }
+        .background-container .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
+        }
+        .background-container .bg-image.active {
+            opacity: 1;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+        .content .about-text {
+            position: absolute;
+            top: -230px;
+            left: 20px;
+            font-family: 'Bizantheum', sans-serif;
+            color: white;
+        }
+        .contact-section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .contact-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .contact-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+
+        .contact-button {
+            background-color: #C7AE98;
+            border: 2px solid #fff;
+            color: white;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-family: 'FuturanBookBT', sans-serif;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .contact-button:hover {
+            background-color: white;
+            color: #C7AE98;
+        }
+        .scrollable-section {
+            position: relative;
+            height: 100vh;
+            background-color: #EFEBE0;
+            overflow: hidden;
+            display: flex;
+        }
+        .scrollable-content {
+            overflow-y: auto;
+            height: 100%;
+            flex: 1;
+            padding-left: 140px;
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .scrollable-content::-webkit-scrollbar { 
+            display: none;  /* Safari and Chrome */
+        }
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px 0;
+            scroll-snap-align: start;
+        }
+        .title {
+            font-size: 100px;
+            font-weight: bold;
+            color: #0a0a0a;
+        }
+        .description {
+            color: #0d0d0e;
+        }
+        .fixed-image-wrapper {
+            position: relative;
+            width: 50%;
+            height: 100%;
+        }
+        .fixed-image {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .footer {
+            background-color: #605F4B;
+            color: white;
+            padding: 20px 0;
+        }        .circle {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid #b08d6f;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .circle img {
+            display: none;
+        }
+        .circle.active img {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- navbar -->
+    <div class="navbar navbar-expand-lg bg-body-tertiary rounded" style="position: fixed; top: 0;
+    width: 100%;
+    z-index: 10;">
+        <div class="container">
+          <a class="navbar-brand" href="#"><img src="kopipujaan.png" style="max-width: 120px; height: auto;" alt="Logo"></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarsExample09">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active futura" aria-current="page" href="#">TENTANG KAMI</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active futura" aria-current="page" href="#">MENU KAMI</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active futura" aria-current="page" href="#">TOKO</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active futura" aria-current="page" href="#">KOLABORASI</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active futura" aria-current="page" href="#">KONTAK KAMI</a>
+              </li>
+            </ul>
+            <form class="d-flex">
+                <button class="btn btn-custom" type="submit"><i class="fas fa-search search-icon"></i></button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    <!-- Layered background section -->
+    <div class="layered-bg">
+        <div class="background-layer" style="background-image: url('back1.png'); transform: translateY(0%);"></div>
+        <div class="background-layer" style="background-image: url('back2.png'); transform: translateY(20%);"></div>
+        <div class="background-layer" style="background-image: url('bg-3.png'); transform: translateY(40%);"></div>
+        <div class="background-layer" style="background-image: url('bg-4.png'); transform: translateY(55%);"></div>
+        <div class="background-layer" style="background-image: url('back5.png'); transform: translateY(70%);"></div>
+        <div class="container content">
+            <div class="row">
+                <div class="col-12">
+                    <h1 style="color: #0a0a0a;">100% Biji Kopi</h1>
+                    <h1 style="color: #0a0a0a;">Arabika Indonesia</h1>
+                    <p class="futura" style="color: #0a0a0a;">Pelopor merek minuman kopi susu terkemuka di seluruh Indonesia dengan mengutamakan "health concern" untuk 
+                    penikmat kopi yang selalu menjadi pilihan anak muda Indonesia untuk menginspirasi anak muda yang aktif dan kreatif.</p>
+                </div>
+            </div>
+        </div>
+        <div class="arrow-down" onclick="scrollToNext()"><i class="fas fa-angle-down"></i></div>
+    </div>
+
+    <div class="background-container" id="backgroundContainer">
+        <div class="bg-image" style="background-image: url('bg/bg1.png');"></div>
+        <div class="bg-image" style="background-image: url('bg/bg1.png');"></div>
+        <div class="bg-image" style="background-image: url('bg/bg2.png');"></div>
+        <div class="bg-image" style="background-image: url('bg/bg3.png');"></div>
+        <div class="bg-image" style="background-image: url('bg/bg4.png');"></div>
+        <div class="overlay"></div>
+        <div class="content">
+            <div class="about-text"><p class="futura">TENTANG KAMI_</p></div>
+            <div class="row">
+                <div class="col-12">
+                    <h1>Mengapa Kopi Pujaan?</h1>
+                    <p class="futura">Sejak pertama kali didirikan pada tahun 2018, Kopi Pujaan sudah memiliki beberapa cabang di Jabodetabek.
+                        Kami selalu menggunakan bahan berkualitas tinggi dan alami.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+      <!-- Scrollable Section -->
+      <div class=".container scrollable-section">
+        <div class="scrollable-content" onscroll="handleScroll()">
+            <div class="text-align" style="color: black; padding-top: 30px;">
+                <p class="futura">MISI KAMI_</p>
+            </div>
+        <div>
+            <img src="skrol-daun.png" class="fixed-image" style="width: 8%; height: 8%; margin-top: 30px; margin-left: 160px">
+        </div>
+            <div class="container">
+                <div class="row content-section" id="biji-kopi-arabika">
+                    <div class="col-12">
+                        <div class="title" style="padding-top: 60px;" id="title-biji">Biji Kopi Arabika</div>
+                        <div class="description" style="padding-top: 160px;" id="desc-biji">
+                            <p class="futura">Biji kopi Arabika mengandung kafein lebih sedikit dibandingkan
+                            dengan biji kopi Robusta. Kami memilih metode roasting yang terbaik
+                            untuk mengurangi kadar asam pada biji kopi, sehingga aman
+                            dikonsumsi oleh mereka yang memilih masalah maag atau GERD.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row content-section" id="gula-aren-murni">
+                    <div class="col-12">
+                        <div class="title" id="title-gula">Gula Aren Murni</div>
+                        <div class="description" id="desc-gula">
+                            <p class="futura">Kami berkomitmen untuk selalu menggunakan 100% gula aren alami,
+                                yang hingga kini masih kami masak sendiri menggunakan kepingan
+                                gula aren.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row content-section" id="boba-taiwan">
+                    <div class="col-12">
+                        <div class="title" id="title-boba">Boba Taiwan</div>
+                        <div class="description" id="desc-boba">
+                            <p class="futura">Boba menjadi topping favorit konsumen Indonesia karena teksturnya
+                                yang kenyal dan rasanya yang lezat. Kami menggunakan boba Taiwan ketimbang boba
+                                lokal karena menawarkan tekstur yang berbeda nan nikmat.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fixed-image-wrapper">
+            <img src="img/bg3.png" alt="Biji Kopi Arabika" class="fixed-image">
+            <div class="circle section-biji" style="top: 20%; left: 70%;" onclick="toggleContent('title-biji', 'desc-biji', this)">
+                <img src="biji.png" alt="Biji Image" class="img-fluid">
+            </div>
+            <div class="circle section-biji" style="top: 50%; left: 60%;" onclick="toggleContent('desc-biji', 'title-biji', this)">
+                <img src="kopi.png" alt="Kopi Image" class="img-fluid">
+            </div>
+            <div class="circle section-gula" style="top: 20%; left: 70%; display: none;" onclick="toggleContent('title-gula', 'desc-gula', this)">
+                <img src="gula.png" alt="Gula Image" class="img-fluid">
+            </div>
+            <div class="circle section-gula" style="top: 50%; left: 60%; display: none;" onclick="toggleContent('desc-gula', 'title-gula', this)">
+                <img src="aren.png" alt="Aren Image" class="img-fluid">
+            </div>
+            <div class="circle section-boba" style="top: 20%; left: 70%;" onclick="toggleContent('title-boba', 'desc-boba', this)">
+                <img src="boba1.png" alt="Boba Image" class="img-fluid">
+            </div>
+            <div class="circle section-boba" style="top: 50%; left: 60%;" onclick="toggleContent('desc-boba', 'title-boba', this)">
+                <img src="boba2.png" alt="Boba Image" class="img-fluid">
+            </div>
+        </div>
+    </div>
+
+    <div class=".container" style="background-color: #C7AE98; padding: 20px;">
+        <div class="row">
+            <div class="col-1">
+                    <p class="futura">MENU_</p>
+            </div>
+            <div class="col-11">
+                <main>
+                    <div class="text-center">
+                        <h1 style="padding-top: 20px;">Seleksi Khusus Dari Menu Kami</h1>
+                    </div>
+                    <div class="main-content">
+                        <div class="menu-item">
+                                <h1 id="mainTitle">Kopi Latte</h1>
+                            </div>
+                        </div>
+                        <div class="menu-item">
+                            <div class="circle-border">
+                                <img id="mainImage" src="kopi1.png" alt="Kopi Latte">
+                            </div>
+                        </div>
+                        <div class="thumbnails">
+                            <div class="thumbnail selected" onclick="changeImage('kopi1.png', 'Kopi Latte', this)">
+                                <img src="kopi1.png" style="width: 70px; height: auto;" alt="Kopi 1">
+                            </div>
+                            <div class="thumbnail" onclick="changeImage('kopi2.png', 'Es Kopi Susu Pujaan Hati', this)">
+                                <img src="kopi2.png" style="width: 70px; height: auto;" alt="Kopi 2">
+                            </div>
+                            <div class="thumbnail" onclick="changeImage('kopi3.png', 'Es Kopi Susu Jatuh Cinta', this)">
+                                <img src="kopi3.png" style="width: 70px; height: auto;" alt="Kopi 3">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lines">
+                        <div class="line horizontal top"></div>
+                        <div class="line horizontal bottom"></div>
+                        <div class="line vertical left"></div>
+                        <div class="line vertical right"></div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+      <!-- Contact Section -->
+      <div class="contact-section">
+        <video autoplay muted loop class="contact-video">
+            <source src="video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="contact-overlay"></div>
+        <div class="contact-content">
+            <button class="contact-button">Hubungi Kami Sekarang</button>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class=".container text-light" style="background-color: #605F4B;">
+        <div class="container text-light">
+            <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5  border-top">
+                <div class="col mb-3">
+                  <h5>Usaha Kami</h5>
+                  <ul class="nav flex-column">
+                    <li class="nav-item mb-2 "><a href="#" class="nav-link p-0 text-light futura">Karir</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">Franchising</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">Franchising</a></li>
+                  </ul>
+                </div>
+                <div class="col mb-3">
+                  <h5>Ketentuan Situs</h5>
+                  <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">Syarat Penggunaan</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">Kebijakan Pribadi</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">Ketentuan Gift Card</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">Aksebilitas</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">Mitra</a></li>
+                  </ul>
+                </div>
+                <div class="col mb-3">
+                  <h5>Layanan Pelanggan</h5>
+                  <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">Hubungi Kami</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">Shipping</a></li>
+                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-light futura">FAQ's</a></li>
+                  </ul>
+                </div>
+                <div class="container">
+                    <h5  class="futura">GABUNG DAFTAR EMAIL KAMI UNTUK DISKON 10% PESANAN PERTAMA ANDA</h5>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control futura" placeholder="Alamat Email" aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <button class="btn btn-outline-secondary" type="button" id="button-addon2">></button>
+                    </div>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com" target="_blank" class="facebook text-light"><i class="fab fa-facebook"></i></a>
+                        <a href="https://www.instagram.com" target="_blank" class="instagram text-light"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.twitter.com" target="_blank" class="twitter text-light"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+            </footer>
+            <div class="row">
+                <div class="col-6">
+                    <small class="futura">© 2024 Kopi Pujaan, All Rights Reserved</small>
+                </div>
+                <div class="col-6 text-end">
+                    <img src="kopipujaan.png" style="width: 200px; height: auto;" alt="Kopi Pujaan Logo">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLayer = 0;
+        const layers = document.querySelectorAll('.background-layer');
+
+        function scrollToNext() {
+            currentLayer++;
+            layers.forEach((layer, index) => {
+                layer.style.transform = `translateY(${(index - currentLayer) * 10}%)`;
+            });
+        }
+
+        function changeImage(src, title, element) {
+            document.getElementById('mainImage').src = src;
+            document.getElementById('mainTitle').textContent = title;
+
+            var thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(function(thumbnail) {
+                thumbnail.classList.remove('selected');
+            });
+
+            element.classList.add('selected');
+        }
+        const images = document.querySelectorAll('.bg-image');
+        let currentIndex = 0;
+
+        function changeBackground() {
+            images[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + 1) % images.length;
+            images[currentIndex].classList.add('active');
+        }
+
+        setInterval(changeBackground, 3000);
+        function showImage(element) {
+            element.classList.toggle('active');
+        }
+        function handleScroll() {
+            const scrollableContent = document.querySelector('.scrollable-content');
+            const sections = document.querySelectorAll('.content-section');
+            const threshold = window.innerHeight / 2;
+
+            sections.forEach((section) => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop >= 0 && sectionTop <= threshold) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+
+            const bijiSection = document.getElementById('biji-kopi-arabika');
+            const gulaSection = document.getElementById('gula-aren-murni');
+            const bobaSection = document.getElementById('boba-taiwan');
+
+            const bijiTop = bijiSection.getBoundingClientRect().top;
+            const gulaTop = gulaSection.getBoundingClientRect().top;
+            const bobaTop = bobaSection.getBoundingClientRect().top;
+
+            if (bijiTop <= threshold && bijiTop >= -threshold) {
+                document.querySelectorAll('.circle').forEach(circle => circle.style.display = 'none');
+                document.querySelectorAll('.section-biji').forEach(circle => circle.style.display = 'flex');
+            } else if (gulaTop <= threshold && gulaTop >= -threshold) {
+                document.querySelectorAll('.circle').forEach(circle => circle.style.display = 'none');
+                document.querySelectorAll('.section-gula').forEach(circle => circle.style.display = 'flex');
+            } else if (bobaTop <= threshold && bobaTop >= -threshold) {
+                document.querySelectorAll('.circle').forEach(circle => circle.style.display = 'none');
+                document.querySelectorAll('.section-boba').forEach(circle => circle.style.display = 'flex');
+            }
+        }
+
+        function toggleContent(showId, hideId, element) {
+            const showElement = document.getElementById(showId);
+            const hideElement = document.getElementById(hideId);
+
+            if (showElement.style.display === 'block') {
+                showElement.style.display = 'none';
+                element.querySelector('img').style.display = 'none';
+            } else {
+                showElement.style.display = 'block';
+                hideElement.style.display = 'none';
+                element.querySelector('img').style.display = 'block';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hide all descriptions initially
+            document.querySelectorAll('.description').forEach(desc => desc.style.display = 'none');
+            // Show all titles initially
+            document.querySelectorAll('.title').forEach(title => title.style.display = 'block');
+        });
+    </script>
+    <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
